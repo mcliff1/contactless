@@ -1,0 +1,21 @@
+# uses aws/codebuild/nodejs:8.11.0
+#
+version: 0.2
+
+
+phases:
+
+  install:
+    commands:
+      - cd contactless && npm install -g serverless
+  build:
+    commands:
+  post_build:
+    commands:
+      - echo $AWS_REGION
+      - serverless deploy --stage dev --region $AWS_REGION
+      - serverless info --region $AWS_REGION
+
+artifacts:
+  files:
+    - contactless/serverless.yml
