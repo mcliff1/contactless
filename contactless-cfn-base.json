@@ -107,9 +107,16 @@
                 },
                 {
                   "Action" : [
+                    "s3:*",
+                  ],
+                  "Resource" : "*",
+                  "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
                     "route53:GetChange",
                   ],
-                  "Resource" : "arc:aws:route53:::change/*",
+                  "Resource" : "arn:aws:route53:::change/*",
                   "Effect" : "Allow"
                 },
                 {
@@ -117,7 +124,7 @@
                     "route53:GetChange",
                     "route53:ChangeResourceRecordSets"
                   ],
-                  "Resource" : "arc:aws:route53:::hostedzone/*",
+                  "Resource" : "arn:aws:route53:::hostedzone/*",
                   "Effect" : "Allow"
                 },
                 {
