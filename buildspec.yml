@@ -7,13 +7,14 @@ phases:
 
   install:
     commands:
-      - cd contactless && npm install -g serverless
+      - npm install -g serverless
   build:
     commands:
   post_build:
     commands:
       - echo $AWS_REGION
-      - serverless deploy --stage dev --region $AWS_REGION
+      - serverless deploy --stack $STACK_NAME --stage $STACK_NAME --region $AWS_REGION --verbose
+      #- serverless deploy --stage dev --region $AWS_REGION
       - serverless info --region $AWS_REGION
 
 artifacts:
