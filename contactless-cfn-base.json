@@ -176,7 +176,7 @@
         "ServiceRole" : { "Ref" : "CodeBuildRole" },
         "Source" : {
           "Type" : "GITHUB",
-          "BuildSpec" : "contactless/buildspec.yml",
+          "BuildSpec" : "buildspec.yml",
           "Location" : { "Ref" : "GitHubLocation"},
           "GitCloneDepth" : 1
         },
