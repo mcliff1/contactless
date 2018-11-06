@@ -15,8 +15,8 @@ phases:
       - echo $AWS_REGION
       - serverless deploy --stack $STACK_NAME --stage $STACK_NAME --region $AWS_REGION --verbose
       #- serverless deploy --stage dev --region $AWS_REGION
-      - serverless info --region $AWS_REGION
+      - SLS_DEBUG=* serverless info --region $AWS_REGION
 
 artifacts:
   files:
-    - contactless/serverless.yml
+    - serverless.yml
