@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Credit Text Outbound Service
+
+
+
+Globals:
+  Function:
+    Runtime: python2.7
+    Environment:
+      Variables:
+        DB_MESSENGER: !Ref MessengerTable
+
+
+
+
+Resources:
+  # ApiGatewayApi:
+  #   Type: AWS::Serverless::Api
+  #   Properties:
+  #     StageName: api
+  #     DefinitionUri: swagger.yaml
