@@ -145,6 +145,13 @@
                   ],
                   "Resource" : "arn:aws:cloudformation:*:*:stack/contactless*/*",
                   "Effect" : "Allow"
+                },
+                {
+                  "Action" : [
+                    "cloudformation:CreateChangeSet"
+                  ],
+                  "Resource" : {"Fn::Join": [":", ["arn:aws:cloudformation", {"Ref": "AWS::Region"}, "aws:transform/Serverless-2016-10-31"]]},
+                  "Effect" : "Allow"
                 }
               ]
             }
