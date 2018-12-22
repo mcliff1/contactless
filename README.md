@@ -18,3 +18,8 @@ This repo is designed to be able to be pushed to a Stack with key environment pa
 running in AWS account throught Code Pipeline (on *init* and *dev* branches)
 
 Build as of 12/22 failed *init*;  the `sam validate` step failed
+
+
+## TODO
+
+Once I get this SAM stack up and running would like to add Cognito Authentication to the stack

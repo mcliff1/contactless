@@ -165,11 +165,15 @@
         "Environment" : {
           "Type" : "LINUX_CONTAINER",
           "ComputeType" : "BUILD_GENERAL1_SMALL",
-          "Image" : "mcliff/slsbuild:1.0.0",
+          "Image" : "mcliff/sambuild:1.0.1",
           "EnvironmentVariables" : [
             {
               "Name" : "BUILD_BUCKET",
               "Value" : {"Ref": "ArtifactStoreBucket"}
+            },
+            {
+              "Name" : "SAM_STACK_NAME",
+              "Value" : {"Fn::Join": [ "-", [{"Ref": "AWS::StackName"}, "sam"]]}
             }
           ]
         },
