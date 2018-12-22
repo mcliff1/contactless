@@ -137,11 +137,14 @@
                     "iam:PassRole",
                     "iam:AttachRolePolicy"
                   ],
-                  "Resource" : {"Fn::Join": [":", [
+                  "Resource" : [
+                    {"Fn::Join": [":", [
                     "arn:aws:iam:",
                     {"Ref": "AWS::AccountId"},
                     "role/contactless*"
                     ]]},
+                    "*"
+                  ],
                   "Effect" : "Allow"
                 },
                 {
