@@ -136,14 +136,23 @@
                     "iam:DeleteRolePolicy",
                     "iam:PassRole"
                   ],
-                  "Resource" : "arn:aws:iam::*:role/contactless*",
+                  "Resource" : {"Fn::Join": [":", [
+                    "arn:aws:iam:",
+                    {"Ref": "AWS::AccountId"},
+                    "role/contactless*"
+                    ]]},
                   "Effect" : "Allow"
                 },
                 {
                   "Action" : [
                     "cloudformation:*"
                   ],
-                  "Resource" : "arn:aws:cloudformation:*:*:stack/contactless*/*",
+                  "Resource": {"Fn::Join": [":", [
+                    "arn:aws:cloudformation",
+                    {"Ref": "AWS::Region"},
+                    {"Ref": "AWS::AccountId"},
+                    "stack/contactless*/*"
+                    ]]},
                   "Effect" : "Allow"
                 },
                 {
