@@ -168,8 +168,8 @@
           "Image" : "mcliff/slsbuild:1.0.0",
           "EnvironmentVariables" : [
             {
-              "Name" : "WEB_BUCKET",
-              "Value" : "placeholder"
+              "Name" : "BUILD_BUCKET",
+              "Value" : {"Ref": "ArtifactStoreBucket"}
             }
           ]
         },
@@ -373,9 +373,15 @@
         {
           "Label" : { "default" : "SSL Certificates (pre-created)"},
           "Parameters" : [ "ApiACMArn", "WebACMArn"]
-        }
+        },
+        {
+          "Label" : { "default" : "Build Information"},
+          "Parameters" : [ "GitHubLocation", "Branch", "OAuthToken" ]
+        },
       ],
       "ParameterLabels" : {
+        "GitHubLocation": { "default" : "URL in GitHub for the source repository to use" },
+        "ApiACMArn": { "default" : "ARN for the SSL Certification (us-east-1 region)" },
         "ApiHostName": { "default" : "Hostname (not include domain) for the API" },
         "WebHostName": { "default" : "Hostname (not include domain) for the Web" }
       }
