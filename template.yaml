@@ -10,6 +10,18 @@ Globals:
     # Environment:
     #   Variables:
     #     DB_MESSENGER: !Ref MessengerTable
+Parameters:
+
+  DomainName:
+    Type: String
+    Default: mattcliff.net
+    Description: DNS Domain Name (must have record in Route 53)
+
+  CertificateArn:
+    Type: String
+    Default: arn:aws:acm:us-east-1:220065781146:certificate/99c23c6e-a2cf-4e83-ba1e-846f373e0d79
+    Description: ARN for SSL certificate
+
 
 
 Resources:
@@ -25,3 +37,12 @@ Resources:
   #   Properties:
   #     StageName: api
   #     DefinitionUri: swagger.yaml
+
+  ApiGatewayDomain:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      DomainName: {"Fn::Join" : ["", [
+        {"Ref": "AWS::StackName"}, "-api.",
+        {"Ref": "DomainName"}
+      ]]}
+      CertificateArn: {"Ref": "CertificateArn"}
