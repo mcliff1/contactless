@@ -6,15 +6,20 @@ Description: Credit Text Outbound Service
 
 Globals:
   Function:
-    Runtime: python2.7
+    Runtime: python3.6
     Environment:
       Variables:
         DB_MESSENGER: !Ref MessengerTable
 
 
-
-
 Resources:
+  ContactUsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.handle
+      Runtime: python2.7
+      CodeUri: src/
+      
   # ApiGatewayApi:
   #   Type: AWS::Serverless::Api
   #   Properties:
