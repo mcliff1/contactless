@@ -136,6 +136,7 @@ def get_call(jsonstr):
         <body style="margin-left: 25px">
         <div><h2>Serverless Contact Demo</h2></div>
         <div>
+        Finally a form you can count on
         """ + form + """
         </div>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
