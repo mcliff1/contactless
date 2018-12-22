@@ -134,7 +134,8 @@
                     "iam:DeleteRole",
                     "iam:PutRolePolicy",
                     "iam:DeleteRolePolicy",
-                    "iam:PassRole"
+                    "iam:PassRole",
+                    "iam:AttachRolePolicy"
                   ],
                   "Resource" : {"Fn::Join": [":", [
                     "arn:aws:iam:",
