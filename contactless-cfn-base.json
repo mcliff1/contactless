@@ -21,21 +21,6 @@
       "Description" : "ARN for the API ACM (must be created in us-east-1)",
       "Type" : "String",
       "Default" : ""
-    },
-    "GitHubLocation" : {
-      "Description" : "Clone URL from GitHub for Code Build",
-      "Type" : "String",
-      "Default" : "https://github.com/mcliff1/contactless.git"
-    },
-    "OAuthToken" : {
-      "Description" : "Token for GitHub repository to include in Code Pipeline",
-      "Type" : "String",
-      "Default" : ""
-    },
-    "Branch" : {
-      "Description" : "Used to load set of properties and common resource (develop, prod)",
-      "Type" : "String",
-      "Default" : ""
     }
 
   },
@@ -173,43 +158,6 @@
       }
     },
 
-    "CodeBuild": {
-      "Type" : "AWS::CodeBuild::Project",
-      "DependsOn" : "CodeBuildRole",
-      "Properties" : {
-        "Name" : { "Ref" : "AWS::StackName" },
-        "Description" : "Application Code Build and Deployment",
-        "Artifacts" : {
-          "Type" : "no_artifacts"
-        },
-        "Environment" : {
-          "Type" : "LINUX_CONTAINER",
-          "ComputeType" : "BUILD_GENERAL1_SMALL",
-          "Image" : "mcliff/sambuild:1.0.1",
-          "EnvironmentVariables" : [
-            {
-              "Name" : "BUILD_BUCKET",
-              "Value" : {"Ref": "ArtifactStoreBucket"}
-            },
-            {
-              "Name" : "SAM_STACK_NAME",
-              "Value" : {"Fn::Join": [ "-", [{"Ref": "AWS::StackName"}, "sam"]]}
-            }
-          ]
-        },
-        "ServiceRole" : { "Ref" : "CodeBuildRole" },
-        "Source" : {
-          "Type" : "GITHUB",
-          "BuildSpec" : "buildspec.yml",
-          "Location" : { "Ref" : "GitHubLocation"},
-          "GitCloneDepth" : 1
-        },
-        "Tags" : [
-          { "Key" : "Name", "Value" : {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-CodeBuild"]]}},
-          { "Key" : "Project", "Value" : {"Ref": "Project"} }
-        ]
-      }
-    },
 
     "CodePipelineRole" : {
       "Type" : "AWS::IAM::Role",
@@ -263,67 +211,6 @@
                 }
               ]
             }
-          }
-        ]
-      }
-    },
-    "CodePipeline" : {
-      "Type" : "AWS::CodePipeline::Pipeline",
-      "Properties" : {
-        "RoleArn" : {"Fn::GetAtt" : ["CodePipelineRole", "Arn"]},
-        "ArtifactStore" : {
-          "Type" : "S3",
-          "Location" : {"Ref" : "ArtifactStoreBucket"}
-        },
-        "Stages": [
-          {
-            "Name" : "Source",
-            "Actions" : [
-              {
-                "Name" : "SourceAction",
-                "ActionTypeId" : {
-                  "Category" : "Source",
-                  "Owner" : "ThirdParty",
-                  "Version" : "1",
-                  "Provider" : "GitHub"
-                },
-                "OutputArtifacts" : [
-                  { "Name" : "SourceOutput" }
-                ],
-                "Configuration" : {
-                  "Owner" : "mcliff1",
-                  "Repo" : "polly",
-                  "PollForSourceChanges" : "false",
-                  "Branch" : {"Ref" : "Branch"},
-                  "OAuthToken" : {"Ref" : "OAuthToken" }
-                },
-                "RunOrder" : 1
-              }
-            ]
-          },
-          {
-            "Name" : "Build",
-            "Actions" : [
-              {
-                "Name" : "BuildAction",
-                "InputArtifacts" : [
-                  {"Name" : "SourceOutput"}
-                ],
-                "ActionTypeId" : {
-                  "Category" : "Build",
-                  "Owner" : "AWS",
-                  "Version" : "1",
-                  "Provider" : "CodeBuild"
-                },
-                "Configuration" : {
-                  "ProjectName" : {"Ref" : "CodeBuild"}
-                },
-                "OutputArtifacts" : [
-                  { "Name" : "BuildOutput" }
-                ],
-                "RunOrder" : 1
-              }
-            ]
           }
         ]
       }
@@ -397,11 +284,7 @@
         {
           "Label" : { "default" : "SSL Certificates (pre-created)"},
           "Parameters" : [ "ApiACMArn", "WebACMArn"]
-        },
-        {
-          "Label" : { "default" : "Build Information"},
-          "Parameters" : [ "GitHubLocation", "Branch", "OAuthToken" ]
-        },
+        }
       ],
       "ParameterLabels" : {
         "GitHubLocation": { "default" : "URL in GitHub for the source repository to use" },
