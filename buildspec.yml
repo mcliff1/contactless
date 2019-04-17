@@ -1,0 +1,34 @@
+# uses aws/codebuild/nodejs:8.11.0
+#
+version: 0.2
+
+# expects parameter 'BUILD_BUCKET'
+
+phases:
+
+  install:
+    commands:
+      #- npm install -g serverless
+      - echo $BUILD_BUCKET
+  build:
+    commands:
+      # - PYTHONUSERBASE=/tmp pip install --user -r requirements.txt
+      # - cp -r /tmp/lib/python2.7/site-packages/* src/
+      - echo $SAM_STACK_NAME
+  post_build:
+    commands:
+      - echo $AWS_REGION
+      #- SLS_DEBUG=* serverless deploy --stack $STACK_NAME --stage $STACK_NAME --region $AWS_REGION --verbose
+      ####- serverless deploy --stage dev --region $AWS_REGION
+      #- serverless info --region $AWS_REGION
+      - set
+      - sam validate
+      - sam package --template-file template.yaml --s3-bucket ${BUILD_BUCKET} --output-template-file interim-template.yaml
+      #- sam deploy --parameter-overrides GpgKey=${STACK_NAME} ParamKey2=ParamValue2 --template-file interim-template.yaml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM
+      #- sam deploy  --parameter-overrides GitLabBranch=${CI_COMMIT_REF_NAME} --template-file interim-template.yaml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM
+      - sam deploy  --template-file interim-template.yaml --stack-name ${SAM_STACK_NAME} --capabilities CAPABILITY_IAM
+
+
+artifacts:
+  files:
+    - serverless.yml
