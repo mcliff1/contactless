@@ -9,7 +9,9 @@ install:
   - pip install aws-sam-cli
 script:
   - aws sts get-caller-identity
-  - sam --region us-west-2 validate
+  - export AWS_DEFAULT_REGION=us-west-2
+  - sam validate
+  #- sam --region us-west-2 validate
   #- sam package --template-file template.yaml
 notifications:
   email:
