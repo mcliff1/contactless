@@ -4,6 +4,17 @@ Serverless Contact Us page
 
 April 14, 2019; refactor this to no longer use *AWS CodeBuild*, rather use *TravisCI*
 
+[travis ci](https://dev.to/codevbus/deploy-aws-lambda-functions-with-aws-sam-cli-and-travis-ci-part-2-2goh)
+[travis ci](https://sysengcooking.com/blog/aws-lambda-with-travis-2/)
+
+
+1. make a policy/role to execute this under; add those keys to the Travis CI config secrets  (I can use the CodeBuild Role) - TODO later I can make this work as a NIU type of account
+2. update the .travis.yaml
+
+
+
+[aws tools](https://dev.to/sagar/implement-a-serverless-cicd-pipeline-with-aws-amazon-web-services-438f)
+
 ## Install notes
 
 This repo is designed to be able to be pushed to a Stack with key environment parameters provided, and the rest runs through a CI stack using the *buildspec.yml* file.
