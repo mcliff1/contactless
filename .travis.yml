@@ -8,6 +8,7 @@ install:
   - pip install awscli
   - pip install aws-sam-cli
 script:
+  - aws sts get-caller-identity
   - sam validate
   #- sam package --template-file template.yaml
 notifications:
