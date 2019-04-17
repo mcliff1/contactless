@@ -67,7 +67,8 @@
                 "s3:HeadBucket",
                 "s3:ListAllMyBuckets",
                 "route53:ListHostedZones",
-                "cloudfront:UpdateDistribution"
+                "cloudfront:UpdateDistribution",
+                "iam:ListPolicies"
               ],
               "Resource" : "*",
               "Effect" : "Allow"
@@ -147,7 +148,7 @@
     },
 
 
-    "CodeBuildPolicy": {
+    "CodeBuildGroup": {
       "Type": "AWS::IAM::Group",
       "Properties": {
       }
