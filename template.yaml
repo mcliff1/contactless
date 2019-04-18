@@ -1,12 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Description: Credit Text Outbound Service
+Description: Contact Service
 
 
 
 Globals:
   Function:
-    Runtime: python3.6
+    Runtime: python3.7
     # Environment:
     #   Variables:
     #     DB_MESSENGER: !Ref MessengerTable
@@ -29,8 +29,14 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: handler.handle
-      Runtime: python2.7
       CodeUri: src/
+      Events:
+        ContactUs:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+
 
   # ApiGatewayApi:
   #   Type: AWS::Serverless::Api
