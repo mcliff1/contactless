@@ -52,7 +52,6 @@ Resources:
         {"Ref": "DomainName"}, "."
       ]]}
 
-        { "Fn::Sub" : "${self:custom.domainname}." }
       RecordSets:
         - Type: A
           Name:  {"Fn::Join" : ["", [
