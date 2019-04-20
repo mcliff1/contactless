@@ -44,11 +44,32 @@ Resources:
   #     StageName: api
   #     DefinitionUri: swagger.yaml
 
+  MyDNSRecord:
+    Type: 'AWS::Route53::RecordSetGroup'
+    DependsOn: ApiGatewayDomain
+    Properties:
+      HostedZoneName: {"Fn::Join" : ["", [
+        {"Ref": "DomainName"}, "."
+      ]]}
+
+        { "Fn::Sub" : "${self:custom.domainname}." }
+      RecordSets:
+        - Type: A
+          Name:  {"Fn::Join" : ["", [
+            {"Ref": "AWS::StackName"}, ".",
+            {"Ref": "DomainName"}
+          ]]}
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2   # hardcoded for all cloudfront
+            DNSName: { "Fn::GetAtt" : ApiGatewayDomain.DistributionDomainName }
+
+
+
   ApiGatewayDomain:
     Type: AWS::ApiGateway::DomainName
     Properties:
       DomainName: {"Fn::Join" : ["", [
-        {"Ref": "AWS::StackName"}, "-api.",
+        {"Ref": "AWS::StackName"}, ".",
         {"Ref": "DomainName"}
       ]]}
       CertificateArn: {"Ref": "CertificateArn"}
