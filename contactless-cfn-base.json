@@ -64,6 +64,7 @@
                 "cloudformation:ListExports",
                 "cloudformation:ListImports",
                 "cloudformation:ListSTacks",
+                "cloudformation:GetTemplateSummary",
                 "s3:HeadBucket",
                 "s3:ListAllMyBuckets",
                 "route53:ListHostedZones",
