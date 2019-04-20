@@ -54,9 +54,9 @@ Resources:
       CertificateArn: {"Ref": "CertificateArn"}
 
 
-    ApiGatewayMapping:
-      Type: 'AWS::ApiGateway::BasePathMapping'
-      DependsOn: ApiGatewayDomain
-      Properties:
-        DomainName: { "Ref" : ApiGatewayDomain }
-        RestApiId: { "Ref" : ServerlessRestApi }
+  ApiGatewayMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    DependsOn: ApiGatewayDomain
+    Properties:
+      DomainName: { "Ref" : ApiGatewayDomain }
+      RestApiId: { "Ref" : ServerlessRestApi }
