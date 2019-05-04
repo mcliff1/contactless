@@ -11,8 +11,8 @@ install:
 script:
   - aws sts get-caller-identity | jq '.'
   - export AWS_DEFAULT_REGION=us-west-2
-  - aws ssm get-parameter --parameter-name /travisci/contactless
-  - aws ssm get-parameter --parameter-name /travisci/contact/${TRAVIS_BRANCH}
+  - aws ssm get-parameter --name /travisci/contactless
+  #- aws ssm get-parameter --name /travisci/contact/${TRAVIS_BRANCH}
   - echo $TRAVIS_BRANCH
   - echo $TRAVIS_PULL_REQUEST_BRANCH
   - export BUILD_BUCKET=sam-build-ci
