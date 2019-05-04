@@ -2,6 +2,13 @@
 Serverless Contact Us page
 
 
+May 5, 2019
+
+ This is publicly hosted on GitHub;   To automate a build process within an AWS environment, you can use Travis CI plug-in
+
+We expect the *contactless-cfn-base.json* template to be used to create an initial stack in the target AWS environment (this creates the */travisci/contactless* **SSM** property); and the create another **SSM** config property with the name */travisci/contactless/BRANCH* for each branch you which to have an automated build on.
+
+
 April 14, 2019; refactor this to no longer use *AWS CodeBuild*, rather use *TravisCI*
 
 [travis ci](https://dev.to/codevbus/deploy-aws-lambda-functions-with-aws-sam-cli-and-travis-ci-part-2-2goh)
@@ -21,7 +28,6 @@ This repo is designed to be able to be pushed to a Stack with key environment pa
 
 1. create the base stack from *contactless-cfn-base.json*
 2. The *template.yml* uses the SAM framework from there
-2. the *serverless.yml* builds from there (no longer used)
 
 
 ## Build Steps

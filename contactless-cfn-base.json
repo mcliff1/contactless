@@ -236,6 +236,18 @@
       }
     },
 
+
+    "ssmTravisCIConfig": {
+      "Type" : "AWS::SSM::Parameter",
+      "Properties" : {
+        "Name" : "/travisci/contactless",
+        "Description" : "Foundational Configuration",
+        "Type" : "String",
+        "Value" : {"Fn::Join": ["", ["{ \"build_bucket\": \"", {"Ref": "DomainName"}, "\"}"]]}
+      }
+    },
+
+
     "ssmDomainName": {
       "Type" : "AWS::SSM::Parameter",
       "Properties" : {
