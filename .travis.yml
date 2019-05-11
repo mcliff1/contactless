@@ -12,11 +12,11 @@ script:
   #- aws sts get-caller-identity | jq '.'
   - export AWS_DEFAULT_REGION=us-west-2
   - aws ssm get-parameter --name /travisci/contactless
-  - BASE_CONFIG=$(aws ssm get-parameter --name /travisci/polly | jq -r '.Parameter.Value')
+  - BASE_CONFIG=$(aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value')
   - echo $BASE_CONFIG
   - S3_BUILD_BUCKET=$(echo $BASE_CONFIG | jq -r '.build_bucket')
   #- echo "Travis branch is $TRAVIS_BRANCH"
-  - CONFIG=$(aws ssm get-parameter --name /travisci/polly/${TRAVIS_BRANCH} | jq -r '.Parameter.Value')
+  - CONFIG=$(aws ssm get-parameter --name /travisci/contactless/${TRAVIS_BRANCH} | jq -r '.Parameter.Value')
   # - echo $CONFIG
   - STACK_NAME=$(echo $CONFIG | jq -r '.stack_name')
   - DOMAIN_NAME=$(echo $CONFIG | jq -r '.domain_name')
