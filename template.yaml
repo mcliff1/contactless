@@ -14,13 +14,18 @@ Parameters:
 
   DomainName:
     Type: String
-    Default: mattcliff.net
+    Default: ""
     Description: DNS Domain Name (must have record in Route 53)
 
   CertificateArn:
     Type: String
-    Default: arn:aws:acm:us-east-1:220065781146:certificate/99c23c6e-a2cf-4e83-ba1e-846f373e0d79
+    Default: ""
     Description: ARN for SSL certificate
+
+  ApiName:
+    Type: String
+    Default: api
+    Description: Hostname for the API
 
 
 
@@ -30,6 +35,9 @@ Resources:
     Properties:
       Handler: handler.handle
       CodeUri: src/
+      Environment:
+        Variables:
+          API_URL: {"Fn::Join": ["", [ {"Ref" :"ApiName"}, ".", {"Ref" : "DomainName"}]]}
       Events:
         ContactUs:
           Type: Api
@@ -55,7 +63,7 @@ Resources:
       RecordSets:
         - Type: A
           Name:  {"Fn::Join" : ["", [
-            {"Ref": "AWS::StackName"}, ".",
+            {"Ref": "ApiName"}, ".",
             {"Ref": "DomainName"}
           ]]}
           AliasTarget:
@@ -68,7 +76,7 @@ Resources:
     Type: AWS::ApiGateway::DomainName
     Properties:
       DomainName: {"Fn::Join" : ["", [
-        {"Ref": "AWS::StackName"}, ".",
+        {"Ref": "ApiName"}, ".",
         {"Ref": "DomainName"}
       ]]}
       CertificateArn: {"Ref": "CertificateArn"}
@@ -84,6 +92,8 @@ Resources:
 
 
 
+Outputs:
 
-
-#Outputs:
+  ApiURL:
+    Description: API endpoint
+    Value: {"Fn::Join": ["", [ {"Ref" :"ApiName"}, ".", {"Ref" : "DomainName"}]]}
