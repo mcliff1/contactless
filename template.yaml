@@ -80,3 +80,10 @@ Resources:
     Properties:
       DomainName: { "Ref" : ApiGatewayDomain }
       RestApiId: { "Ref" : ServerlessRestApi }
+      Stage: Prod
+
+
+
+
+
+Outputs:
