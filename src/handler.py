@@ -112,7 +112,7 @@ def get_call(jsonstr):
 
 
                 $.ajax({
-                    url: 'https://""" + api+_url + """/',
+                    url: 'https://""" + api_url + """/',
                     method: 'POST',
                     data: JSON.stringify(formData),
                     success: function() {
