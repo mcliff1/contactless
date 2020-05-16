@@ -2,7 +2,7 @@
 # vars - https://docs.travis-ci.com/user/environment-variables/#convenience-variables
 language: python
 python:
-  - '2.7'
+  - '3.6'
 branches:
   only: feature-init
 install:
