@@ -1,0 +1,36 @@
+# added for aws builds
+# vars - https://docs.travis-ci.com/user/environment-variables/#convenience-variables
+language: python
+python:
+  - '3.6'
+branches:
+  only: feature-init
+install:
+  - pip install awscli
+  - pip install aws-sam-cli
+script:
+  #- aws sts get-caller-identity | jq '.'
+  - export AWS_DEFAULT_REGION=us-west-2
+  - aws ssm get-parameter --name /travisci/contactless
+  - BASE_CONFIG=$(aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value')
+  - echo $BASE_CONFIG
+  - S3_BUILD_BUCKET=$(echo $BASE_CONFIG | jq -r '.build_bucket')
+  #- echo "Travis branch is $TRAVIS_BRANCH"
+  - CONFIG=$(aws ssm get-parameter --name /travisci/contactless/${TRAVIS_BRANCH} | jq -r '.Parameter.Value')
+  # - echo $CONFIG
+  - STACK_NAME=$(echo $CONFIG | jq -r '.stack_name')
+  - DOMAIN_NAME=$(echo $CONFIG | jq -r '.domain_name')
+  - API_NAME=$(echo $CONFIG | jq -r '.api_name')
+  - CERT_ARN=$(echo $CONFIG | jq -r '.cert_arn')
+  #- aws ssm get-parameter --name /travisci/contact/${TRAVIS_BRANCH}
+  #- export BUILD_BUCKET=sam-build-ci
+  #- export SAM_STACK_NAME=contactless-init
+  - sam validate
+  #- sam --region us-west-2 validate
+  - sam package --template-file template.yaml --s3-bucket ${S3_BUILD_BUCKET} --output-template-file interim-template.yaml
+  #- sam deploy  --template-file interim-template.yaml --stack-name ${SAM_STACK_NAME} --capabilities CAPABILITY_IAM
+  - sam deploy --parameter-overrides DomainName=${DOMAIN_NAME} CertificateArn=${CERT_ARN} ApiName=${API_NAME} --template-file interim-template.yaml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM
+
+notifications:
+  email:
+    on_failure: always

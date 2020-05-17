@@ -1,12 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Description: Credit Text Outbound Service
+Description: Contact Service
 
 
 
 Globals:
   Function:
-    Runtime: python3.6
+    Runtime: python3.7
     # Environment:
     #   Variables:
     #     DB_MESSENGER: !Ref MessengerTable
@@ -14,13 +14,18 @@ Parameters:
 
   DomainName:
     Type: String
-    Default: mattcliff.net
+    Default: ""
     Description: DNS Domain Name (must have record in Route 53)
 
   CertificateArn:
     Type: String
-    Default: arn:aws:acm:us-east-1:220065781146:certificate/99c23c6e-a2cf-4e83-ba1e-846f373e0d79
+    Default: ""
     Description: ARN for SSL certificate
+
+  ApiName:
+    Type: String
+    Default: api
+    Description: Hostname for the API
 
 
 
@@ -29,8 +34,17 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: handler.handle
-      Runtime: python2.7
       CodeUri: src/
+      Environment:
+        Variables:
+          API_URL: {"Fn::Join": ["", [ {"Ref" :"ApiName"}, ".", {"Ref" : "DomainName"}]]}
+      Events:
+        ContactUs:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+
 
   # ApiGatewayApi:
   #   Type: AWS::Serverless::Api
@@ -38,11 +52,48 @@ Resources:
   #     StageName: api
   #     DefinitionUri: swagger.yaml
 
+  MyDNSRecord:
+    Type: 'AWS::Route53::RecordSetGroup'
+    DependsOn: ApiGatewayDomain
+    Properties:
+      HostedZoneName: {"Fn::Join" : ["", [
+        {"Ref": "DomainName"}, "."
+      ]]}
+
+      RecordSets:
+        - Type: A
+          Name:  {"Fn::Join" : ["", [
+            {"Ref": "ApiName"}, ".",
+            {"Ref": "DomainName"}
+          ]]}
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2   # hardcoded for all cloudfront
+            DNSName: { "Fn::GetAtt" : ApiGatewayDomain.DistributionDomainName }
+
+
+
   ApiGatewayDomain:
     Type: AWS::ApiGateway::DomainName
     Properties:
       DomainName: {"Fn::Join" : ["", [
-        {"Ref": "AWS::StackName"}, "-api.",
+        {"Ref": "ApiName"}, ".",
         {"Ref": "DomainName"}
       ]]}
       CertificateArn: {"Ref": "CertificateArn"}
+
+
+  ApiGatewayMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    DependsOn: ApiGatewayDomain
+    Properties:
+      DomainName: { "Ref" : ApiGatewayDomain }
+      RestApiId: { "Ref" : ServerlessRestApi }
+      Stage: Prod
+
+
+
+Outputs:
+
+  ApiURL:
+    Description: API endpoint
+    Value: {"Fn::Join": ["", [ {"Ref" :"ApiName"}, ".", {"Ref" : "DomainName"}]]}

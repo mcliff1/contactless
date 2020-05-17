@@ -19,6 +19,8 @@ from decimal import Decimal
 import boto3
 
 
+
+
 class DecimalEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, Decimal):
@@ -62,7 +64,7 @@ def post_call(in_json):
 
     logging.info("insert: %s", in_json)
     rc = 503
-    jstr = { "result" : "nothing happened" }
+    jstr = {"result" : "nothing happened" }
 
     return {
         "body": json.dumps(jstr),
@@ -97,6 +99,8 @@ def get_call(jsonstr):
         </form>
         """
 
+    api_url = os.environ['API_URL']
+
     script = """
         $(document).ready(function(){
 
@@ -108,7 +112,7 @@ def get_call(jsonstr):
 
 
                 $.ajax({
-                    url: 'https://contact.mattcliff.net/',
+                    url: 'https://""" + api_url + """/',
                     method: 'POST',
                     data: JSON.stringify(formData),
                     success: function() {
