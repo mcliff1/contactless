@@ -17,6 +17,11 @@ script:
   - S3_BUILD_BUCKET=$(echo $BASE_CONFIG | jq -r '.build_bucket')
   #- echo "Travis branch is $TRAVIS_BRANCH"
   - CONFIG=$(aws ssm get-parameter --name /travisci/contactless/${TRAVIS_BRANCH} | jq -r '.Parameter.Value')
+  #
+  - aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value'
+  - FOUNDATION_CONFIG=$(aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value' | jq '.')
+  - echo $FOUNDATION_CONFIG
+  #
   # - echo $CONFIG
   - STACK_NAME=$(echo $CONFIG | jq -r '.stack_name')
   - DOMAIN_NAME=$(echo $CONFIG | jq -r '.domain_name')

@@ -1,6 +1,33 @@
 # contactless
 Serverless Contact Us page
 
+## About
+
+This is an example application which makes a servless contact page using only Lambda functions (no static content)
+
+## History
+
+May 22, 2020
+
+refactor to clear the seperation of base account setup with app stack.
+
+Assumes the following exist for auto-deploy.
+- Travis CI environ configured with AWS credentials
+- Travis yaml file indicates which branches to build on
+- Each branch build expects to find corresponding build properties in */foundation/travsci/contactless* SSM key
+
+
+Structure of SSM config:
+```
+{
+  'branch': {
+    'stack_name': XXX,
+    'domain_name': XXX,
+    'api_name': XXX,
+    'cert_arn': XXXX
+  }
+}
+```
 
 May 5, 2019
 
