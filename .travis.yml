@@ -11,25 +11,28 @@ install:
 script:
   #- aws sts get-caller-identity | jq '.'
   - export AWS_DEFAULT_REGION=us-west-2
-  - aws ssm get-parameter --name /travisci/contactless
-  - BASE_CONFIG=$(aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value')
-  - echo $BASE_CONFIG
-  - S3_BUILD_BUCKET=$(echo $BASE_CONFIG | jq -r '.build_bucket')
+  #- aws ssm get-parameter --name /travisci/contactless
+  #- BASE_CONFIG=$(aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value')
+  #- echo $BASE_CONFIG
+  #- S3_BUILD_BUCKET=$(echo $BASE_CONFIG | jq -r '.build_bucket')
   #- echo "Travis branch is $TRAVIS_BRANCH"
-  - CONFIG=$(aws ssm get-parameter --name /travisci/contactless/${TRAVIS_BRANCH} | jq -r '.Parameter.Value')
+  #- CONFIG=$(aws ssm get-parameter --name /travisci/contactless/${TRAVIS_BRANCH} | jq -r '.Parameter.Value')
   #
   - aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value'
-  - FOUNDATION_CONFIG=$(aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value' | jq '.')
-  - echo $FOUNDATION_CONFIG
+  - CONFIG=$(aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value')
+  - echo $CONFIG
   #
   # - echo $CONFIG
-  - STACK_NAME=$(echo $CONFIG | jq -r '.stack_name')
-  - DOMAIN_NAME=$(echo $CONFIG | jq -r '.domain_name')
-  - API_NAME=$(echo $CONFIG | jq -r '.api_name')
-  - CERT_ARN=$(echo $CONFIG | jq -r '.cert_arn')
-  #- aws ssm get-parameter --name /travisci/contact/${TRAVIS_BRANCH}
-  #- export BUILD_BUCKET=sam-build-ci
-  #- export SAM_STACK_NAME=contactless-init
+  # - STACK_NAME=$(echo $CONFIG | jq -r '.stack_name')
+  # - DOMAIN_NAME=$(echo $CONFIG | jq -r '.domain_name')
+  # - API_NAME=$(echo $CONFIG | jq -r '.api_name')
+  # - CERT_ARN=$(echo $CONFIG | jq -r '.cert_arn')
+  - echo $CONFIG | jq -r '.$TRAVIS_BRANCH.stack_name'
+  - S3_BUILD_BUCKET=$(echo $CONFIG | jq -r '.build_bucket')
+  - STACK_NAME=$(echo $CONFIG | jq -r '.$TRAVIS_BRANCH.stack_name')
+  - DOMAIN_NAME=$(echo $CONFIG | jq -r '.$TRAVIS_BRANCH.domain_name')
+  - API_NAME=$(echo $CONFIG | jq -r '.$TRAVIS_BRANCH.api_name')
+  - CERT_ARN=$(echo $CONFIG | jq -r '.$TRAVIS_BRANCH.cert_arn')
   - sam validate
   #- sam --region us-west-2 validate
   - sam package --template-file template.yaml --s3-bucket ${S3_BUILD_BUCKET} --output-template-file interim-template.yaml

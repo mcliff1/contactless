@@ -20,11 +20,14 @@ Assumes the following exist for auto-deploy.
 Structure of SSM config:
 ```
 {
-  'branch': {
-    'stack_name': XXX,
-    'domain_name': XXX,
-    'api_name': XXX,
-    'cert_arn': XXXX
+  'build_bucket': XXX,
+  'branches': {
+    'branch': {
+      'stack_name': XXX,
+      'domain_name': XXX,
+      'api_name': XXX,
+      'cert_arn': XXXX
+    }
   }
 }
 ```
