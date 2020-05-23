@@ -28,11 +28,13 @@ script:
   # - API_NAME=$(echo $CONFIG | jq -r '.api_name')
   # - CERT_ARN=$(echo $CONFIG | jq -r '.cert_arn')
   - echo $CONFIG | jq -r ".$TRAVIS_BRANCH.stack_name"
-  - S3_BUILD_BUCKET=$(echo $CONFIG | jq -r ".build_bucket")
-  - STACK_NAME=$(echo $CONFIG | jq -r ".$TRAVIS_BRANCH.stack_name")
-  - DOMAIN_NAME=$(echo $CONFIG | jq -r ".$TRAVIS_BRANCH.domain_name")
-  - API_NAME=$(echo $CONFIG | jq -r ".$TRAVIS_BRANCH.api_name")
-  - CERT_ARN=$(echo $CONFIG | jq -r ".$TRAVIS_BRANCH.cert_arn")
+  - S3_BUILD_BUCKET=$(echo $CONFIG | jq -r '.build_bucket')
+  - BRANCH_CONFIG=$(echo $CONFIG | jq --arg branch "$TRAVIS_BRANCH" -r '.branches[$branch]')
+  - echo $BRANCH_CONFIG
+  - STACK_NAME=$(echo $BRANCH_CONFIG | jq -r '.stack_name')
+  - DOMAIN_NAME=$(echo $BRANCH_CONFIG | jq -r '.domain_name')
+  - API_NAME=$(echo $BRANCH_CONFIG | jq -r '.api_name')
+  - CERT_ARN=$(echo $BRANCH_CONFIG | jq -r '.cert_arn')
   - sam validate
   #- sam --region us-west-2 validate
   - sam package --template-file template.yaml --s3-bucket ${S3_BUILD_BUCKET} --output-template-file interim-template.yaml
