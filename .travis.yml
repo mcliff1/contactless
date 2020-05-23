@@ -1,4 +1,10 @@
 # added for aws builds
+# requires AWS credentials
+# using us-west-2
+#   SSM params /foundation/travisci/contactless
+#              /foundation/iam/role-cf-deploy
+#
+#
 # vars - https://docs.travis-ci.com/user/environment-variables/#convenience-variables
 language: python
 python:
@@ -38,7 +44,7 @@ script:
   #- sam --region us-west-2 validate
   - sam package --template-file template.yaml --s3-bucket ${S3_BUILD_BUCKET} --output-template-file interim-template.yaml
   #- sam deploy  --template-file interim-template.yaml --stack-name ${SAM_STACK_NAME} --capabilities CAPABILITY_IAM
-  - DEPLOY_ROLE=$(aws ssm get-parameter --name /foundation/iam/role-cf-deploy)
+  - DEPLOY_ROLE=$(aws ssm get-parameter --name /foundation/iam/role-cf-deploy | jq -r '.Parameter.Value')
   - sam deploy --parameter-overrides DomainName=${DOMAIN_NAME} CertificateArn=${CERT_ARN} ApiName=${API_NAME} --template-file interim-template.yaml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM --role-arn $DEPLOY_ROLE --no-fail-on-empty-changeset
 
 notifications:
