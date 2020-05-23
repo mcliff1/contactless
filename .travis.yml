@@ -27,7 +27,6 @@ script:
   # - DOMAIN_NAME=$(echo $CONFIG | jq -r '.domain_name')
   # - API_NAME=$(echo $CONFIG | jq -r '.api_name')
   # - CERT_ARN=$(echo $CONFIG | jq -r '.cert_arn')
-  - echo $CONFIG | jq -r ".$TRAVIS_BRANCH.stack_name"
   - S3_BUILD_BUCKET=$(echo $CONFIG | jq -r '.build_bucket')
   - BRANCH_CONFIG=$(echo $CONFIG | jq --arg branch "$TRAVIS_BRANCH" -r '.branches[$branch]')
   - echo $BRANCH_CONFIG
@@ -39,7 +38,8 @@ script:
   #- sam --region us-west-2 validate
   - sam package --template-file template.yaml --s3-bucket ${S3_BUILD_BUCKET} --output-template-file interim-template.yaml
   #- sam deploy  --template-file interim-template.yaml --stack-name ${SAM_STACK_NAME} --capabilities CAPABILITY_IAM
-  - sam deploy --parameter-overrides DomainName=${DOMAIN_NAME} CertificateArn=${CERT_ARN} ApiName=${API_NAME} --template-file interim-template.yaml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM
+  - DEPLOY_ROLE=$(aws ssm get-parameter --name /foundation/iam/role-cf-deploy)
+  - sam deploy --parameter-overrides DomainName=${DOMAIN_NAME} CertificateArn=${CERT_ARN} ApiName=${API_NAME} --template-file interim-template.yaml --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM --role-arn $DEPLOY_ROLE --no-fail-on-empty-changeset
 
 notifications:
   email:
