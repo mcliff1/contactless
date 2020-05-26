@@ -10,7 +10,9 @@ language: python
 python:
   - '3.6'
 branches:
-  only: feature-init
+  - feature-init
+  - release/qa
+  - master
 install:
   - pip install awscli
   - pip install aws-sam-cli
