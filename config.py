@@ -38,6 +38,7 @@ class ConfigTool(object):
     def __init__(self, profile, region):
         """ sets up tool aws connection """
         self.session = boto3.Session(profile_name=profile, region_name=region)
+        self.account_name = self.session.client('ssm').get_parameter_value(ParameterName='/foundation/account/name')['Paramater']['Value']
 
     def setup(self, branch: str, stack=None: str):
         """

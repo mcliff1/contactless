@@ -8,7 +8,7 @@
 # vars - https://docs.travis-ci.com/user/environment-variables/#convenience-variables
 language: python
 python:
-  - '3.8'
+  - '3.6'
 branches:
   - feature-init
   - release/qa
@@ -45,7 +45,7 @@ script:
   #- CONFIG=$(aws ssm get-parameter --name /foundation/travisci/contactless | jq -r '.Parameter.Value')
   - CFG_PARAM="/contactless/build/${TRAVIS_BRANCH}/config"
   - echo "looking up SSM parameter $CFG_PARAM"
-  - CONFIG=$(aws ssm get-parameter --name $CFG_PARAM --query '.Parameter.Value' --output text)
+  - CONFIG=$(aws ssm get-parameter --name $CFG_PARAM --query 'Parameter.Value' --output text)
   - echo $CONFIG
   #
   # - echo $CONFIG
@@ -54,7 +54,7 @@ script:
   # - API_NAME=$(echo $CONFIG | jq -r '.api_name')
   # - CERT_ARN=$(echo $CONFIG | jq -r '.cert_arn')
   #- S3_BUILD_BUCKET=$(echo $CONFIG | jq -r '.build_bucket')
-  - S3_BUILD_BUCKET=$(aws ssm get-parameter --name /foundation/s3/buildbucket --query '.Parameter.Value' --output text)
+  - S3_BUILD_BUCKET=$(aws ssm get-parameter --name /foundation/s3/buildbucket --query 'Parameter.Value' --output text)
   - BRANCH_CONFIG=$(echo $CONFIG | jq --arg branch "$TRAVIS_BRANCH" -r '.branches[$branch]')
   - echo $BRANCH_CONFIG
   - STACK_NAME=$(echo $BRANCH_CONFIG | jq -r '.stack_name')
