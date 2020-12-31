@@ -17,6 +17,7 @@ Assumes the following exist for auto-deploy.
 - Each branch build expects to find corresponding build properties in */foundation/travsci/contactless* SSM key
 
 
+
 Structure of SSM config:
 ```
 {
@@ -31,6 +32,14 @@ Structure of SSM config:
   }
 }
 ```
+
+The CI process is configured to assume a role in an AWS account/region; this region is expected to have a SSM parameter */contactless/build/{branch}/config* where branch corresponds to the **TRAVIS_BRANCH** environment variable in the build shell.
+
+The script *config.py* can be used with *--init*, *--save*, *--load* options to set the values from command line.
+
+
+
+
 
 May 5, 2019
 
