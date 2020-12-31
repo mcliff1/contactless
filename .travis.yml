@@ -32,6 +32,7 @@ install:
 script:
   #- aws sts get-caller-identity | jq '.'
   - *setup_role
+  - set
   - export AWS_DEFAULT_REGION=us-west-2
   #- aws ssm get-parameter --name /travisci/contactless
   #- BASE_CONFIG=$(aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value')
@@ -49,7 +50,8 @@ script:
   # - DOMAIN_NAME=$(echo $CONFIG | jq -r '.domain_name')
   # - API_NAME=$(echo $CONFIG | jq -r '.api_name')
   # - CERT_ARN=$(echo $CONFIG | jq -r '.cert_arn')
-  - S3_BUILD_BUCKET=$(echo $CONFIG | jq -r '.build_bucket')
+  #- S3_BUILD_BUCKET=$(echo $CONFIG | jq -r '.build_bucket')
+  - S3_BUILD_BUCKET=$(aws ssm get-parameter --name /foundation/s3/buildbucket --query '.Parameter.Value' --output text)
   - BRANCH_CONFIG=$(echo $CONFIG | jq --arg branch "$TRAVIS_BRANCH" -r '.branches[$branch]')
   - echo $BRANCH_CONFIG
   - STACK_NAME=$(echo $BRANCH_CONFIG | jq -r '.stack_name')
