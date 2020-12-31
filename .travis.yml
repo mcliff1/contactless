@@ -8,7 +8,7 @@
 # vars - https://docs.travis-ci.com/user/environment-variables/#convenience-variables
 language: python
 python:
-  - '3.6'
+  - '3.8'
 branches:
   - feature-init
   - release/qa
