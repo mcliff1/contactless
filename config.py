@@ -38,9 +38,9 @@ class ConfigTool(object):
     def __init__(self, profile, region):
         """ sets up tool aws connection """
         self.session = boto3.Session(profile_name=profile, region_name=region)
-        self.account_name = self.session.client('ssm').get_parameter_value(ParameterName='/foundation/account/name')['Paramater']['Value']
+        self.account_name = self.session.client('ssm').get_parameter(Name='/foundation/account/name')['Parameter']['Value']
 
-    def setup(self, branch: str, stack=None: str):
+    def setup(self, branch: str, stack: str = None, api_name: str = None):
         """
         runs the initialization setup
 
@@ -53,12 +53,22 @@ class ConfigTool(object):
         }
 
         """
+        ssm_client = self.session.client('ssm')
+        ssm_param = lambda x: ssm_client.get_parameter(Name=x)['Parameter']['Value']
+
+        print(f'account name is {self.account_name}')
         result = {
-          'stack_name': 'XXX', #{/foundation/account/name}-
-          'domain_name': 'XXX',
-          'api_name': 'XXX',
-          'cert_arn': 'XXXX'
+          'stack_name': stack if stack else f'{self.account_name}-contactless',
+          'domain_name': ssm_param('/foundation/dns/mattcliffnet'),
+          'api_name': api_name if api_name else 'contactless', #/ contactless (for now)
+          'cert_arn': ssm_param('/foundation/cert/mattcliff.net')
         }
+        ssm_client.put_parameter(
+            Name=f'/contactless/build/{branch}/config',
+            Value=json.dumps(result),
+            Type='String',
+            Description=f'Contactless Configuration for Branch: {branch}'
+        )
 
 
 
@@ -87,4 +97,4 @@ if __name__ == '__main__':
     ARGS = parse()
     TOOL = ConfigTool(ARGS.profile, ARGS.region)
 
-    print(json.dumps(TOOL.setup()))
+    print(json.dumps(TOOL.setup('feature-init')))
