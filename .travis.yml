@@ -21,7 +21,7 @@ install:
   - echo "============== SETUP ASSUME ROLE =============="
   - aws sts get-caller-identity
   - echo "Assume role $ROLE_ARN"
-  - KST=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name "gitlab-ci-${CI_COMMIT_SHA}" )
+  - KST=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name "travis-ci-${TRAVIS_COMMIT}" )
   - export AWS_ACCESS_KEY_ID=$(echo $KST| jq -r '.Credentials.AccessKeyId')
   - export AWS_SECRET_ACCESS_KEY=$(echo $KST| jq -r '.Credentials.SecretAccessKey')
   - export AWS_SESSION_TOKEN=$(echo $KST| jq -r '.Credentials.SessionToken')
@@ -31,7 +31,8 @@ install:
 script:
   #- aws sts get-caller-identity | jq '.'
   - *setup_role
-  - set
+  #- set
+  - echo "$TRAVIS_COMMIT $TRAVIS_BRANCH"
   #- export AWS_DEFAULT_REGION=us-west-2
   #- aws ssm get-parameter --name /travisci/contactless
   #- BASE_CONFIG=$(aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value')
@@ -41,7 +42,10 @@ script:
   #- CONFIG=$(aws ssm get-parameter --name /travisci/contactless/${TRAVIS_BRANCH} | jq -r '.Parameter.Value')
   #
   #- aws ssm get-parameter --name /travisci/contactless | jq -r '.Parameter.Value'
-  - CONFIG=$(aws ssm get-parameter --name /foundation/travisci/contactless | jq -r '.Parameter.Value')
+  #- CONFIG=$(aws ssm get-parameter --name /foundation/travisci/contactless | jq -r '.Parameter.Value')
+  - CFG_PARAM="/contactless/build/${TRAVIS_BRANCH}/config"
+  - echo "looking up SSM parameter $CFG_PARAM"
+  - CONFIG=$(aws ssm get-parameter --name $CFG_PARAM --query '.Parameter.Value' --output text)
   - echo $CONFIG
   #
   # - echo $CONFIG
